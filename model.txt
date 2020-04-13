@@ -1,0 +1,21 @@
+<S,P,s0,T,w>
+
+S si stan z przestrzeni stanów musi zawierać:
+- planszę z zaznaczonymi wolnymi i wykorzystanymi polami
+- aktualne położenie figury czarnego i białego, 
+- czyj jest ruch,
+
+
+P p operator jest legalnym ruchem gracza wykonującego ruch. Składa się z 2 kroków:
+1. Poruszenie swojej figury
+2. Usunięcie pola z planszy
+Założenia
+- w ramach planszy
+- ruch może odbyć się w pionie, poziomie i na skos o jedno pole
+- usunąć można dowolne pole, które jest wolne i nie stoi na nim żadna figura
+- wykonywane są na zmiane
+
+
+T stan jest terminalny, gdy dany gracz nie może poruszyć swojej figury na żadne sąsiednie pole
+
+w 

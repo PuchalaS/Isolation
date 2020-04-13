@@ -1,0 +1,12 @@
+- określenie modelu:
+	M = <S, P, s0, T, w>
+	-czym jest przestrzeń stanów S
+	-czym jest zbiór operatorów P
+	-czym jest stan terminalny T
+	-czym jest stan początkowy s0
+	-czym jest wypłata w
+- implementacja modelu
+- określenie heurystycznej funkcji oceniającej konkretny stan
+- implementacja algorytmu min max z przycinaniem alfa-beta
+- przygotowanie GUI do gry z AI
+- zbieramy wyniki i statystyki wykonania tj. liczymy m.in. czas obliczeń, liczbę kroków/generacji, ew. ale niekoniecznie złożoność pamięciową itp.

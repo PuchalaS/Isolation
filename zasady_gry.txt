@@ -1,0 +1,10 @@
+The following rules is from the website of cs670:
+
+Each of the two players has one piece.
+The board has 7´7 positions which initially contain squares, except for the initial positions of the pieces.
+A move consists of two subsequent actions:
+	moving one's piece to a neighboring (horizontally, vertically, or diagonally) field that contains a square but not the opponent's piece,
+	removing any square with no piece on it
+If a player cannot move any more, he/she loses the game.
+
+https://www.cs.umb.edu/~yunxu/isola/rules.html
