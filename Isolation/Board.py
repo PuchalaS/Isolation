@@ -12,6 +12,8 @@ def clear():
         os.system('clear')
     elif current_platform == 'Windows':
         os.system('cls')
+    elif current_platform == 'Linux':
+        os.system('clear')
 
 
 class Board():
