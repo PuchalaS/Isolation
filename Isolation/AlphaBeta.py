@@ -3,11 +3,12 @@ from Isolation.Board import Board
 
 
 class AlphaBeta(object):
-    def __init__(self, board: Board, depth: int):
+    def __init__(self, board: Board, current_player: int, depth: int):
         self.board = board
         self.depth = depth
         self.__alpha = (-1) * np.inf
         self.__beta = np.inf
+        self.current_player = current_player
         self.evaluate = lambda: 1
 
     def predict_state(self):        
@@ -15,7 +16,7 @@ class AlphaBeta(object):
             if depth_left == 0:
                 return (state, self.evaluate())
 
-            for possible_state in self.board.legal_moves:
+            for possible_state in possible_states(state, 2):
                 found_state, score = AlphaBetaMin(
                     possible_state, 
                     alpha, 
@@ -30,7 +31,7 @@ class AlphaBeta(object):
             if depth_left == 0:
                 return (state, -self.evaluate())
 
-            for possible_state in self.board.legal_moves:
+            for possible_state in possible_states(state, 3):
                 found_state, score = AlphaBetaMin(
                     possible_state, 
                     alpha, 
