@@ -127,3 +127,13 @@ class SemiRandomPlayer(Agent):
         self.make_semi_random_remove(board)
         return board
 
+class MinMaxPlayer(Agent):
+    def __init__(self, name, is_white, start_x, start_y):
+        super().__init__(name, is_white, start_x, start_y)
+
+    def fetch_action(self, board):
+        move, remove = minmax()
+        board.make_move(move)
+        board.make_remove(remove)
+        return board
+
