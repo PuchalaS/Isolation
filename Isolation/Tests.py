@@ -77,5 +77,18 @@ def minmax_vs_minmax(cycles):
     print ("Bialy wygral: "+ str(white_wins)+"%")
     print ("Czarny wygral: "+ str(black_wins)+"%")
 
-minmax_vs_radom(10)
+def minmax_vs_human(cycles):
+    results= []
+    for x in range(cycles):
+        white = MinMaxPlayer("Biały", True, 6, 3)
+        black = HumanPlayer("Czarny", False, 0, 3)
+        board = Board(white, black)
+        results.append(new_game(board))
+    black_wins = np.count_nonzero(results)/cycles * 100
+    white_wins = 100 - black_wins
+    print ("Bialy wygral: "+ str(white_wins)+"%")
+    print ("Czarny wygral: "+ str(black_wins)+"%")
+
+#minmax_vs_radom(10)
+minmax_vs_human(1)
 #minmax_vs_semi_radom(10)
