@@ -11,7 +11,8 @@ class AlphaBeta(object):
                  eval_function_factory):
         self.board = board.copy()
         margin = np.zeros((9,9))
-        margin[1:-1, 1:-1] = self.board 
+        margin[1:-1, 1:-1] = self.board
+        self.board = margin 
         self.depth = depth
         self.__alpha = (-1) * np.inf
         self.__beta = np.inf
@@ -27,6 +28,7 @@ class AlphaBeta(object):
         self.board = state.copy()
         margin = np.zeros((9,9))
         margin[1:-1, 1:-1] = self.board
+        self.board = margin 
 
     def predict_state(self):
         def AlphaBetaMax(state, alpha, beta, depth_left):
@@ -146,3 +148,11 @@ def remove_square(state: np.ndarray, square_pos: tuple) -> np.ndarray:
 def print_state(state: np.ndarray):
     print(state[1:-1, 1:-1])
     
+
+state = np.ones((7,7))
+player_position = (0,3)
+enemy_position = (6,3)
+state[player_position] = 2
+state[enemy_position] = 3
+alpha_beta = AlphaBeta(state, 3, 2, 3, MeasureOneToTwoFactory)
+alpha_beta.predict_state()
