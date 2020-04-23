@@ -18,8 +18,8 @@ class AlphaBeta(object):
         self.__inital_player_position = find_player_position(
             self.board, player)
         self.__inital_enemy_position = find_player_position(self.board, enemy)
-        self.__player_state_eval_fn = eval_function_factory(2, 3)
-        self.__enemy_state_eval_fn = eval_function_factory(3, 2)
+        self.__player_state_eval_fn = eval_function_factory(self.player, self.enemy)
+        self.__enemy_state_eval_fn = eval_function_factory(self.enemy, self.player)
 
     def update_state(self, state: np.ndarray) -> None:
         self.state = state
@@ -64,7 +64,12 @@ class AlphaBeta(object):
                     break
             return (best_state, best_value)
 
-        return AlphaBetaMax(self.board.copy(), self.__alpha, self.__beta, self.depth)
+        current_state = self.board.copy()
+        predicted_state, score = AlphaBetaMax(current_state, self.__alpha, self.__beta, self.depth)
+        player_pos = np.array(np.where(current_state == self.player)).T[0] - np.array([1,1])
+        removal = np.array(np.where((current_state == 0) != (predicted_state == 0))).T[0] - np.array([1,1])
+        return ((player_pos[0], player_pos[1]), (removal[0], removal[1]))
+        # TODO: Konwersja stanu na poszczególny ruch (nowa pozycja gracza, wsp. usuniętego kwadratu) - odjąć (1,1)
 
 
 
@@ -136,21 +141,3 @@ def remove_square(state: np.ndarray, square_pos: tuple) -> np.ndarray:
 
 def print_state(state: np.ndarray):
     print(state[1:-1, 1:-1])
-
-
-__state = np.zeros((9, 9))
-state = np.ones((7, 7))
-__state[1:8, 1:8] = 1
-state = __state
-
-player_position = (1, 4)
-enemy_position = (7, 4)
-state[player_position] = 2
-state[enemy_position] = 3
-
-states = list(possible_states(state, 2, 3))
-alpha_beta = AlphaBeta(state, 4, 2, 3, MeasureOneToTwoFactory)
-player_eval = MeasureOneToTwoFactory(2, 3)
-enemy_eval = MeasureOneToTwoFactory(3, 2)
-state = alpha_beta.predict_state()
-print(state)
