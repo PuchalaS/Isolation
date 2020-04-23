@@ -126,4 +126,3 @@ class SemiRandomPlayer(Agent):
         self.make_move_to_center(board)
         self.make_semi_random_remove(board)
         return board
-

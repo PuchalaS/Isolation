@@ -2,6 +2,7 @@ import numpy as np
 import os
 import platform
 import random
+
 #from Player import Player
 # clear = lambda: os.system('cls') #on Windows System
 from IPython.display import clear_output
@@ -214,6 +215,7 @@ class Board():
 
         return (move in self.legal_moves)
 
+
     def make_semi_random_turn(self):
         self.make_move_to_center()
         self.make_semi_random_remove()
@@ -381,5 +383,4 @@ class Board():
             print (str(row) + "|" + row_str)
         print(" |---------------------------|")
         print("   0   1   2   3   4   5   6   ")
-        
-      
+       
