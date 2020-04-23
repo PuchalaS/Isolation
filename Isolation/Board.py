@@ -2,6 +2,8 @@ import numpy as np
 import os
 import platform
 import random
+
+#from Player import Player
 # clear = lambda: os.system('cls') #on Windows System
 from IPython.display import clear_output
 
@@ -213,7 +215,43 @@ class Board():
 
         return (move in self.legal_moves)
 
-    def remove_square(self, move):
+
+    def make_semi_random_turn(self):
+        self.make_move_to_center()
+        self.make_semi_random_remove()
+
+    def make_random_turn(self):
+        self.make_random_move()
+        self.make_random_remove()
+    
+    def make_move_to_center(self):
+        self.set_legal_moves()
+        
+        legal_moves_ndarray = np.asarray(self.legal_moves)
+        abs_sum = np.abs(legal_moves_ndarray[:,0]-3) + np.abs(legal_moves_ndarray[:,1]-3)
+        result = np.where(abs_sum == np.min(abs_sum))
+        move_to_center = tuple(map(tuple,legal_moves_ndarray[result[0],:]))[0]
+        self.make_move(move_to_center)
+
+    def make_semi_random_remove(self):
+        self.set_legal_moves_inactive()
+        if(not self.legal_moves_inactive):
+            pass
+        else:
+            random_remove = random.choice(self.legal_moves_inactive)
+            self.make_remove(random_remove)
+
+    def make_random_move(self):
+        self.set_legal_moves()
+        random_move = random.choice(self.legal_moves)
+        self.make_move(random_move)
+
+    def make_random_remove(self):
+        self.set_legal_removes()
+        random_remove = random.choice(self.legal_removes)
+        self.make_remove(random_remove)
+
+    def make_remove(self, move):
         """Usuwa pole z planszy. Update board_status.
 
         Parameters
@@ -262,42 +300,87 @@ class Board():
 
     def test_game(self):
         """Prosta gra testowa. Input w postaci: x,y """
-        key_input = input("Wcisnij klawisz aby rozpoczac")
+        self.init_players_pos()
+        key_input = ""
         while key_input != "q":
-            print("Na posunieciu:" + self.active_player.name)
-            self.print_board()
-            if(self.is_active_player_lost()):
-                print("Przegrana")
-                break
-
-            key_input = input("Podaj ruch")
-            if key_input == "q":
-                break
-
-            move = tuple(int(x) for x in key_input.split(","))
-            while(not self.make_move(move)):
-                print("Nielegalny ruch")
-                key_input = input("Podaj ruch")
-                move = tuple(int(x) for x in key_input.split(","))
-                if key_input == "q":
-                    break
-            self.print_board()
-
-            key_input = input("Podaj usuniecie")
-            remove = tuple(int(x) for x in key_input.split(","))
-
-            while(not self.remove_square(remove)):
-                print("Nielegalne usuniecie")
-                key_input = input("Podaj usuniecie")
-                remove = tuple(int(x) for x in key_input.split(","))
-                if key_input == "q":
-                    break
-
-            self.print_board()
-
-            self.switch_turn()
             clear()
-            clear_output()
+            
+            print("Na posunieciu: " + self.active_player.name)
+            if self.active_player.type == 1:
+                key_input = input("Wcisnij klawisz aby rozpoczac ")
+                self.print_board()
+                if(self.is_active_player_lost()):
+                   print("Przegral - " +self.active_player.name)
+                   return self.active_player.is_white
+                   
 
+                key_input = input("Podaj ruch: ")
+                if key_input == "q":
+                    break
+
+                move = tuple(int(x) for x in key_input.split(","))
+                while(not self.make_move(move)):
+                    print("Nielegalny ruch!")
+                    key_input = input("Podaj ruch: ")
+                    move = tuple(int(x) for x in key_input.split(","))
+                    if key_input == "q":
+                        break
+                self.print_board()
+
+                clear()
+                print("Na usunieciu:" + self.active_player.name)
+                self.print_board()
+                key_input = input("Podaj usuniecie: ")
+                remove = tuple(int(x) for x in key_input.split(","))
+
+    
+                while(not self.make_remove(remove)):
+                    print("Nielegalne usuniecie")
+                    key_input = input("Podaj usuniecie: ")
+                    remove = tuple(int(x) for x in key_input.split(","))
+                    if key_input == "q":
+                        break
+                    
+                self.print_board()
+
+                self.switch_turn()
+                clear()
+            elif(self.active_player.type == 2):
+                if(self.is_active_player_lost()):
+                   print("Przegral - " +self.active_player.name)
+                   self.print_board()
+                   return self.active_player.is_white
+                self.make_random_turn()
+                self.print_board()
+                self.switch_turn()
+                clear()
+
+            elif(self.active_player.type == 3):
+                if(self.is_active_player_lost()):
+                   print("Przegral - " +self.active_player.name)
+                   self.print_board()
+                   return self.active_player.is_white
+                self.make_semi_random_turn()
+                self.print_board()
+                self.switch_turn()
+                clear()
+        
+        
+        
     def print_board(self):
-        print(self.board_status)
+        charar = np.chararray((7, 7))
+        charar = np.where(self.board_status == 1, "   ",self.board_status)
+        charar = np.where(self.board_status == 0, " X ",charar)
+        charar = np.where(self.board_status == 2, " B ",charar)
+        charar = np.where(self.board_status == 3, " C ",charar)
+        row_str = ""
+        col = ""
+        for row in range(self.height):
+            print(" |---------------------------|")
+            row_str = ""
+            for col in range(self.width):
+                row_str = row_str + charar[row][col] + "|"
+            print (str(row) + "|" + row_str)
+        print(" |---------------------------|")
+        print("   0   1   2   3   4   5   6   ")
+       

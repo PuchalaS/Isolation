@@ -141,3 +141,4 @@ def remove_square(state: np.ndarray, square_pos: tuple) -> np.ndarray:
 
 def print_state(state: np.ndarray):
     print(state[1:-1, 1:-1])
+    
