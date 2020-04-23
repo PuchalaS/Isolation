@@ -2,6 +2,7 @@ import numpy as np
 import os
 import platform
 import random
+from AlphaBeta import AlphaBeta, MeasureOneToTwoFactory
 def clear():
     current_platform = platform.system()
     if current_platform == 'Darwin':
@@ -131,9 +132,11 @@ class SemiRandomPlayer(Agent):
 class MinMaxPlayer(Agent):
     def __init__(self, name, is_white, start_x, start_y):
         super().__init__(name, is_white, start_x, start_y)
+        
 
     def fetch_action(self, board):
-        move, remove = minmax()
+        minmax = AlphaBeta(board.board_status,3,2,3, MeasureOneToTwoFactory)
+        move, remove = minmax.predict_state()
         board.make_move(move)
         board.make_remove(remove)
         return board
