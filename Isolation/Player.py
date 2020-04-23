@@ -33,7 +33,7 @@ class HumanPlayer(Agent):
 
     def fetch_action(self, board):
         valid_choice = False
-        clear()
+        #clear()
         board.print_board()
         while not valid_choice:
             try:
@@ -55,7 +55,7 @@ class HumanPlayer(Agent):
                 print('Niepoprawne znaki!')
                 continue
             valid_choice = True
-        clear()
+        #clear()
         board.print_board()
         valid_choice = False
         while not valid_choice:
@@ -137,6 +137,8 @@ class MinMaxPlayer(Agent):
     def fetch_action(self, board):
         minmax = AlphaBeta(board.board_status,3,2,3, MeasureOneToTwoFactory)
         move, remove = minmax.predict_state()
+        print (move)
+        print (remove)
         board.make_move(move)
         board.make_remove(remove)
         return board

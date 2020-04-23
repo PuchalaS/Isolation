@@ -18,7 +18,7 @@ def new_game(board):
     board.init_players_pos();
     while (board.is_active_player_lost()==False):
         board = board.active_player.fetch_action(board)
-        clear()
+        #clear()
         board.print_board()
         board.switch_turn()
     
