@@ -125,6 +125,7 @@ class SemiRandomPlayer(Agent):
     def fetch_action(self, board):
         self.make_move_to_center(board)
         self.make_semi_random_remove(board)
+
         return board
 
 class MinMaxPlayer(Agent):
@@ -136,4 +137,5 @@ class MinMaxPlayer(Agent):
         board.make_move(move)
         board.make_remove(remove)
         return board
+
 
