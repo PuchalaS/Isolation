@@ -9,7 +9,9 @@ class AlphaBeta(object):
                  player: int,
                  enemy: int,
                  eval_function_factory):
-        self.board = board
+        self.board = board.copy()
+        margin = np.zeros((9,9))
+        margin[1:-1, 1:-1] = self.board 
         self.depth = depth
         self.__alpha = (-1) * np.inf
         self.__beta = np.inf
@@ -22,7 +24,9 @@ class AlphaBeta(object):
         self.__enemy_state_eval_fn = eval_function_factory(self.enemy, self.player)
 
     def update_state(self, state: np.ndarray) -> None:
-        self.state = state
+        self.board = state.copy()
+        margin = np.zeros((9,9))
+        margin[1:-1, 1:-1] = self.board
 
     def predict_state(self):
         def AlphaBetaMax(state, alpha, beta, depth_left):
