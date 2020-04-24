@@ -135,7 +135,7 @@ class MinMaxPlayer(Agent):
         
 
     def fetch_action(self, board):
-        minmax = AlphaBeta(board.board_status,3,2,3, MeasureOneToTwoFactory)
+        minmax = AlphaBeta(board.board_status,2,2,3, MeasureOneToTwoFactory)
         move, remove = minmax.predict_state()
         print (move)
         print (remove)
