@@ -5,7 +5,6 @@ import random
 
 #from Player import Player
 # clear = lambda: os.system('cls') #on Windows System
-from IPython.display import clear_output
 
 
 def clear():
@@ -138,7 +137,7 @@ class Board():
             self.legal_moves.append((player_pos[0]+1, player_pos[1]-1))
 
     def set_legal_moves_inactive(self):
-        """Wpisuje legalne ruchy aktywnego gracza do legal_moves."""
+        """Wpisuje legalne ruchy nieaktywnego gracza do legal_moves_inactive."""
         player_pos = self.get_inactive_player_pos()
         self.legal_moves_inactive = []
         # góra
@@ -246,6 +245,7 @@ class Board():
         return (not self.legal_moves)
 
     def randomize(self):
+        """Funkcja pomocnicza do testow. Wylosowywuje stan planszy """
         self.board_status = np.random.randint(
             2, size=(self.width, self.height))
         for x in range(random.randint(1, 6)):
@@ -264,76 +264,17 @@ class Board():
         print("Aktywny gracz: " + self.active_player.name)
         self.print_board()
 
-    def test_game(self):
-        """Prosta gra testowa. Input w postaci: x,y """
-        self.init_players_pos()
-        key_input = ""
-        while key_input != "q":
-            clear()
-            
-            print("Na posunieciu: " + self.active_player.name)
-            if self.active_player.type == 1:
-                key_input = input("Wcisnij klawisz aby rozpoczac ")
-                self.print_board()
-                if(self.is_active_player_lost()):
-                   print("Przegral - " +self.active_player.name)
-                   return self.active_player.is_white
-                   
-
-                key_input = input("Podaj ruch: ")
-                if key_input == "q":
-                    break
-
-                move = tuple(int(x) for x in key_input.split(","))
-                while(not self.make_move(move)):
-                    print("Nielegalny ruch!")
-                    key_input = input("Podaj ruch: ")
-                    move = tuple(int(x) for x in key_input.split(","))
-                    if key_input == "q":
-                        break
-                self.print_board()
-
-                clear()
-                print("Na usunieciu:" + self.active_player.name)
-                self.print_board()
-                key_input = input("Podaj usuniecie: ")
-                remove = tuple(int(x) for x in key_input.split(","))
-
-    
-                while(not self.make_remove(remove)):
-                    print("Nielegalne usuniecie")
-                    key_input = input("Podaj usuniecie: ")
-                    remove = tuple(int(x) for x in key_input.split(","))
-                    if key_input == "q":
-                        break
-                    
-                self.print_board()
-
-                self.switch_turn()
-                clear()
-            elif(self.active_player.type == 2):
-                if(self.is_active_player_lost()):
-                   print("Przegral - " +self.active_player.name)
-                   self.print_board()
-                   return self.active_player.is_white
-                self.make_random_turn()
-                self.print_board()
-                self.switch_turn()
-                clear()
-
-            elif(self.active_player.type == 3):
-                if(self.is_active_player_lost()):
-                   print("Przegral - " +self.active_player.name)
-                   self.print_board()
-                   return self.active_player.is_white
-                self.make_semi_random_turn()
-                self.print_board()
-                self.switch_turn()
-                clear()
-        
         
         
     def print_board(self):
+        """Konwersja board_status na tablice ze znakami.
+        0 = "X" usuniete z gry pole
+        1 = " " wolne pole
+        2 = "B" figura gracza białego
+        3 = "C" figura gracza czarnego
+
+        Dodane rowniez elemety interfejsu planszy
+        """
         charar = np.chararray((7, 7))
         charar = np.where(self.board_status == 1, "   ",self.board_status)
         charar = np.where(self.board_status == 0, " X ",charar)

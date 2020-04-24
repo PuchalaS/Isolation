@@ -104,8 +104,4 @@ def human_game():
     key_input = input("Nacisnij dowolny klawisz, aby wrocic do menu glownego")
     menu()
 
-def main():
-    menu()
 
-if __name__ == "__main__":
-    main()
