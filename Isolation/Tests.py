@@ -89,6 +89,8 @@ def minmax_vs_human(cycles):
     print ("Bialy wygral: "+ str(white_wins)+"%")
     print ("Czarny wygral: "+ str(black_wins)+"%")
 
-#minmax_vs_radom(100)
+
+minmax_vs_semi_radom(20)
 #minmax_vs_human(1)
-minmax_vs_semi_radom(100)
+#minmax_vs_semi_radom(10)
+
