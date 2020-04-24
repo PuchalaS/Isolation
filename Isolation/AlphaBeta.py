@@ -1,4 +1,6 @@
 import numpy as np
+import datetime as dt
+import json
 from typing import Callable
 
 
@@ -8,11 +10,12 @@ class AlphaBeta(object):
                  depth: int,
                  player: int,
                  enemy: int,
-                 eval_function_factory):
+                 eval_function_factory,
+                 log_file_path=None):
         self.board = board.copy()
-        margin = np.zeros((9,9))
+        margin = np.zeros((9, 9))
         margin[1:-1, 1:-1] = self.board
-        self.board = margin 
+        self.board = margin
         self.depth = depth
         self.__alpha = (-1) * np.inf
         self.__beta = np.inf
@@ -21,14 +24,19 @@ class AlphaBeta(object):
         self.__inital_player_position = find_player_position(
             self.board, player)
         self.__inital_enemy_position = find_player_position(self.board, enemy)
-        self.__player_state_eval_fn = eval_function_factory(self.player, self.enemy)
-        self.__enemy_state_eval_fn = eval_function_factory(self.enemy, self.player)
+        self.__player_state_eval_fn = eval_function_factory(
+            self.player, self.enemy)
+        self.__enemy_state_eval_fn = eval_function_factory(
+            self.enemy, self.player)
+
+        if log_file_path:
+            self.log_file_path = log_file_path
 
     def update_state(self, state: np.ndarray) -> None:
         self.board = state.copy()
-        margin = np.zeros((9,9))
+        margin = np.zeros((9, 9))
         margin[1:-1, 1:-1] = self.board
-        self.board = margin 
+        self.board = margin
 
     def predict_state(self):
         def AlphaBetaMax(state, alpha, beta, depth_left):
@@ -73,17 +81,20 @@ class AlphaBeta(object):
         current_state = self.board.copy()
         depth = self.depth
         predicted_state = None
+
         while (predicted_state is None) and (depth >= 1):
-            predicted_state, _ = AlphaBetaMax(current_state, self.__alpha, self.__beta, depth)
+            predicted_state, _ = AlphaBetaMax(
+                current_state, self.__alpha, self.__beta, depth)
             depth -= 1
 
         if predicted_state is None:
-            return ((-1,-1), (-1,-1))
+            return ((-1, -1), (-1, -1))
         else:
-            player_pos = np.array(np.where(predicted_state == self.player)).T[0] - np.array([1,1])
-            removal = np.array(np.where((current_state == 0) != (predicted_state == 0))).T[0] - np.array([1,1])
+            player_pos = np.array(
+                np.where(predicted_state == self.player)).T[0] - np.array([1, 1])
+            removal = np.array(np.where((current_state == 0) != (
+                predicted_state == 0))).T[0] - np.array([1, 1])
             return ((player_pos[0], player_pos[1]), (removal[0], removal[1]))
-
 
 
 def MeasureOneToTwoFactory(first_player: int, second_player: int):
@@ -96,9 +107,11 @@ def MeasureOneToTwoFactory(first_player: int, second_player: int):
 
 def MeasureOneStepFurtherFactory(first_player: int, second_player: int):
     def MeasureOneStepFurther(state: np.ndarray) -> float:
-        first_player_moves = count_possible_states(state, first_player)
-        second_player_moves = count_possible_states(state, second_player)
-        return first_player_moves - (2 * second_player_moves)
+        score = 2 * count_possible_states(state, first_player)
+        for possible_state in possible_states(state, second_player, first_player):
+            score += count_possible_states(possible_state, second_player)
+
+        return score
     return MeasureOneStepFurther
 
 
@@ -164,6 +177,6 @@ def print_state(state: np.ndarray):
     print(state[1:-1, 1:-1])
 
 
-s = np.array([[1,0,0,0,1,1,1], [1,0,1,0,0,0,1], [1,0,2,3,0,0,1], [1,0,0,0,1,0,1], [0,0,0,0,0,1,1], [1,1,1,1,1,1,1], [1,1,1,0,1,1,1]])
-alpha_beta = AlphaBeta(s, 3, 2, 3, MeasureOneToTwoFactory)
-print(alpha_beta.predict_state())
+# s = np.array([[1,0,0,0,1,1,1], [1,0,1,0,0,0,1], [1,0,2,3,0,0,1], [1,0,0,0,1,0,1], [0,0,0,0,0,1,1], [1,1,1,1,1,1,1], [1,1,1,0,1,1,1]])
+# alpha_beta = AlphaBeta(s, 3, 2, 3, MeasureOneToTwoFactory)
+# print(alpha_beta.predict_state())
