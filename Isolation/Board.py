@@ -216,40 +216,6 @@ class Board():
         return (move in self.legal_moves)
 
 
-    def make_semi_random_turn(self):
-        self.make_move_to_center()
-        self.make_semi_random_remove()
-
-    def make_random_turn(self):
-        self.make_random_move()
-        self.make_random_remove()
-    
-    def make_move_to_center(self):
-        self.set_legal_moves()
-        
-        legal_moves_ndarray = np.asarray(self.legal_moves)
-        abs_sum = np.abs(legal_moves_ndarray[:,0]-3) + np.abs(legal_moves_ndarray[:,1]-3)
-        result = np.where(abs_sum == np.min(abs_sum))
-        move_to_center = tuple(map(tuple,legal_moves_ndarray[result[0],:]))[0]
-        self.make_move(move_to_center)
-
-    def make_semi_random_remove(self):
-        self.set_legal_moves_inactive()
-        if(not self.legal_moves_inactive):
-            pass
-        else:
-            random_remove = random.choice(self.legal_moves_inactive)
-            self.make_remove(random_remove)
-
-    def make_random_move(self):
-        self.set_legal_moves()
-        random_move = random.choice(self.legal_moves)
-        self.make_move(random_move)
-
-    def make_random_remove(self):
-        self.set_legal_removes()
-        random_remove = random.choice(self.legal_removes)
-        self.make_remove(random_remove)
 
     def make_remove(self, move):
         """Usuwa pole z planszy. Update board_status.

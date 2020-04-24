@@ -33,13 +33,12 @@ class HumanPlayer(Agent):
 
     def fetch_action(self, board):
         valid_choice = False
-        #clear()
+        clear()
+        print ("Na posunieciu gracz: "+ board.active_player.name)
         board.print_board()
         while not valid_choice:
             try:
                 key_input = input("Podaj ruch: ")
-                if key_input == "q":
-                    break
                 move = tuple(int(x) for x in key_input.split(","))
 
                 while(not board.make_move(move)):
@@ -47,22 +46,21 @@ class HumanPlayer(Agent):
                     try:
                         key_input = input("Podaj poprawny ruch: ")
                         move = tuple(int(x) for x in key_input.split(","))
-                        if key_input == "q":
-                            break
                     except ValueError:
+                        continue
                         print('Niepoprawne znaki!')
             except ValueError:
                 print('Niepoprawne znaki!')
                 continue
             valid_choice = True
-        #clear()
+            if key_input == "q":
+                    break
+        clear()
         board.print_board()
         valid_choice = False
         while not valid_choice:
             try:
                 key_input = input("Podaj usuniecie: ")
-                if key_input == "q":
-                    break
                 move = tuple(int(x) for x in key_input.split(","))
 
                 while(not board.make_remove(move)):
@@ -73,6 +71,7 @@ class HumanPlayer(Agent):
                         if key_input == "q":
                             break
                     except ValueError:
+                        continue
                         print('Niepoprawne znaki!')
             except ValueError:
                 print('Niepoprawne znaki!')
@@ -130,17 +129,27 @@ class SemiRandomPlayer(Agent):
         return board
 
 class MinMaxPlayer(Agent):
-    def __init__(self, name, is_white, start_x, start_y):
+    def __init__(self, name, is_white, start_x, start_y, depth):
         super().__init__(name, is_white, start_x, start_y)
-        
+        self.depth = depth
 
     def fetch_action(self, board):
-        minmax = AlphaBeta(board.board_status,2,2,3, MeasureOneToTwoFactory)
-        move, remove = minmax.predict_state()
-        print (move)
-        print (remove)
-        board.make_move(move)
-        board.make_remove(remove)
+        if self.is_white:
+            minmax = AlphaBeta(board.board_status,self.depth,2,3, MeasureOneToTwoFactory)
+            print ("AI oblicza ruch...")
+        
+            move, remove = minmax.predict_state()
+            clear()
+            board.make_move(move)
+            board.make_remove(remove)
+        else:
+            minmax = AlphaBeta(board.board_status,self.depth,3,2, MeasureOneToTwoFactory)
+            print ("AI oblicza ruch...")
+        
+            move, remove = minmax.predict_state()
+            clear()
+            board.make_move(move)
+            board.make_remove(remove)
         return board
 
 
