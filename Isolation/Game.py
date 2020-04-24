@@ -29,6 +29,7 @@ def new_game(board):
 def menu():
     clear()
     key_input = ""
+    print("||*****************GRA W IZOLACJE*****************||")
     print("||===================== MENU =====================||\n")
     print("(1). Rozpocznij gre przeciwko algorytmowi min-max \n")
     print("(2). Rozpocznij gre przeciwko ludzkiemu graczowi\n")
