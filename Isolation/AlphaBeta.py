@@ -71,11 +71,18 @@ class AlphaBeta(object):
             return (best_state, best_value)
 
         current_state = self.board.copy()
-        predicted_state, score = AlphaBetaMax(current_state, self.__alpha, self.__beta, self.depth)
-        player_pos = np.array(np.where(predicted_state == self.player)).T[0] - np.array([1,1])
-        removal = np.array(np.where((current_state == 0) != (predicted_state == 0))).T[0] - np.array([1,1])
-        return ((player_pos[0], player_pos[1]), (removal[0], removal[1]))
-        # TODO: Konwersja stanu na poszczególny ruch (nowa pozycja gracza, wsp. usuniętego kwadratu) - odjąć (1,1)
+        depth = self.depth
+        predicted_state = None
+        while (predicted_state is None) and (depth >= 1):
+            predicted_state, _ = AlphaBetaMax(current_state, self.__alpha, self.__beta, depth)
+            depth -= 1
+
+        if predicted_state is None:
+            return ((-1,-1), (-1,-1))
+        else:
+            player_pos = np.array(np.where(predicted_state == self.player)).T[0] - np.array([1,1])
+            removal = np.array(np.where((current_state == 0) != (predicted_state == 0))).T[0] - np.array([1,1])
+            return ((player_pos[0], player_pos[1]), (removal[0], removal[1]))
 
 
 
@@ -85,6 +92,14 @@ def MeasureOneToTwoFactory(first_player: int, second_player: int):
         second_player_moves = count_possible_states(state, second_player)
         return first_player_moves - (2 * second_player_moves)
     return MeasureOneToTwo
+
+
+def MeasureOneStepFurtherFactory(first_player: int, second_player: int):
+    def MeasureOneStepFurther(state: np.ndarray) -> float:
+        first_player_moves = count_possible_states(state, first_player)
+        second_player_moves = count_possible_states(state, second_player)
+        return first_player_moves - (2 * second_player_moves)
+    return MeasureOneStepFurther
 
 
 def count_possible_states(state: np.ndarray, player: int) -> int:
@@ -147,3 +162,8 @@ def remove_square(state: np.ndarray, square_pos: tuple) -> np.ndarray:
 
 def print_state(state: np.ndarray):
     print(state[1:-1, 1:-1])
+
+
+s = np.array([[1,0,0,0,1,1,1], [1,0,1,0,0,0,1], [1,0,2,3,0,0,1], [1,0,0,0,1,0,1], [0,0,0,0,0,1,1], [1,1,1,1,1,1,1], [1,1,1,0,1,1,1]])
+alpha_beta = AlphaBeta(s, 3, 2, 3, MeasureOneToTwoFactory)
+print(alpha_beta.predict_state())
