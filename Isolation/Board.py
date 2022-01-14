@@ -9,12 +9,14 @@ import random
 
 def clear():
     current_platform = platform.system()
-    if current_platform == 'Darwin':
+    if (
+        current_platform == 'Darwin'
+        or current_platform != 'Windows'
+        and current_platform == 'Linux'
+    ):
         os.system('clear')
     elif current_platform == 'Windows':
         os.system('cls')
-    elif current_platform == 'Linux':
-        os.system('clear')
 
 
 class Board():
@@ -191,25 +193,19 @@ class Board():
         self.set_legal_moves()
         current_position = self.get_active_player_pos()
         if (move in self.legal_moves):
-            if self.move_nuber == 0 or self.move_nuber == 1:  # dla pierwszego ruchu bialego i czarnego chcemy
+            if self.move_nuber in [0, 1]:  # dla pierwszego ruchu bialego i czarnego chcemy
                 # usunać pole na którym wczesniej stała figura
                 self.board_status[current_position[0]
                                   ][current_position[1]] = Board.NO_SQUARE
-                if(self.active_player.is_white):
-                    self.board_status[move[0], move[1]] = Board.PLAYER_WHITE
-                else:
-                    self.board_status[move[0], move[1]] = Board.PLAYER_BLACK
-                self.active_player.pos_x = move[0]
-                self.active_player.pos_y = move[1]
             else:
                 self.board_status[current_position[0],
                                   current_position[1]] = Board.FREE_SQUARE
-                if(self.active_player.is_white):
-                    self.board_status[move[0], move[1]] = Board.PLAYER_WHITE
-                else:
-                    self.board_status[move[0], move[1]] = Board.PLAYER_BLACK
-                self.active_player.pos_x = move[0]
-                self.active_player.pos_y = move[1]
+            if(self.active_player.is_white):
+                self.board_status[move[0], move[1]] = Board.PLAYER_WHITE
+            else:
+                self.board_status[move[0], move[1]] = Board.PLAYER_BLACK
+            self.active_player.pos_x = move[0]
+            self.active_player.pos_y = move[1]
             self.move_nuber = self.move_nuber + 1
 
         return (move in self.legal_moves)
@@ -248,7 +244,7 @@ class Board():
         """Funkcja pomocnicza do testow. Wylosowywuje stan planszy """
         self.board_status = np.random.randint(
             2, size=(self.width, self.height))
-        for x in range(random.randint(1, 6)):
+        for _ in range(random.randint(1, 6)):
             self.switch_turn()
         self.active_player.pos_x = random.randint(0, self.width-1)
         self.active_player.pos_y = random.randint(0, self.height-1)
