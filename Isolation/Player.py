@@ -5,12 +5,14 @@ import random
 from AlphaBeta import AlphaBeta, MeasureOneToTwoFactory
 def clear():
     current_platform = platform.system()
-    if current_platform == 'Darwin':
+    if (
+        current_platform == 'Darwin'
+        or current_platform != 'Windows'
+        and current_platform == 'Linux'
+    ):
         os.system('clear')
     elif current_platform == 'Windows':
         os.system('cls')
-    elif current_platform == 'Linux':
-        os.system('clear')
 
 class Agent():
 
@@ -68,14 +70,13 @@ class HumanPlayer(Agent):
                 key_input = input("Podaj ruch: ")
                 move = tuple(int(x) for x in key_input.split(","))
 
-                while(not board.make_move(move)):
+                while (not board.make_move(move)):
                     print("Nielegalny ruch!")
                     try:
                         key_input = input("Podaj poprawny ruch: ")
                         move = tuple(int(x) for x in key_input.split(","))
                     except ValueError:
                         continue
-                        print('Niepoprawne znaki!')
             except ValueError:
                 print('Niepoprawne znaki!')
                 continue
@@ -90,7 +91,7 @@ class HumanPlayer(Agent):
                 key_input = input("Podaj usuniecie: ")
                 move = tuple(int(x) for x in key_input.split(","))
 
-                while(not board.make_remove(move)):
+                while (not board.make_remove(move)):
                     print("Nielegalne usuniecie!")
                     try:
                         key_input = input("Podaj poprawne usuniecie: ")
@@ -99,7 +100,6 @@ class HumanPlayer(Agent):
                             break
                     except ValueError:
                         continue
-                        print('Niepoprawne znaki!')
             except ValueError:
                 print('Niepoprawne znaki!')
                 continue
@@ -157,9 +157,7 @@ class SemiRandomPlayer(Agent):
     def make_semi_random_remove(self,board):
         """Obliczenie i usuniecie pola z sasiedztwa gracza przeciwnego """
         board.set_legal_moves_inactive()
-        if(not board.legal_moves_inactive):
-            pass
-        else:
+        if board.legal_moves_inactive:
             random_remove = random.choice(board.legal_moves_inactive)
             board.make_remove(random_remove)
 
@@ -181,20 +179,14 @@ class MinMaxPlayer(Agent):
         """Funkcja oblicza najlepszy ruch za pomocą algorytmu min-max"""
         if self.is_white:
             minmax = AlphaBeta(board.board_status,self.depth,2,3, MeasureOneToTwoFactory)
-            print ("AI oblicza ruch...")
-        
-            move, remove = minmax.predict_state()
-            clear()
-            board.make_move(move)
-            board.make_remove(remove)
         else:
             minmax = AlphaBeta(board.board_status,self.depth,3,2, MeasureOneToTwoFactory)
-            print ("AI oblicza ruch...")
-        
-            move, remove = minmax.predict_state()
-            clear()
-            board.make_move(move)
-            board.make_remove(remove)
+        print ("AI oblicza ruch...")
+
+        move, remove = minmax.predict_state()
+        clear()
+        board.make_move(move)
+        board.make_remove(remove)
         return board
 
 

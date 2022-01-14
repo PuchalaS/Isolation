@@ -7,7 +7,7 @@ from Game import new_game
 
 def random_vs_radom(cycles):
     results= []
-    for x in range(cycles):
+    for _ in range(cycles):
         white = RandomPlayer("Biały", True, 6, 3)
         black = RandomPlayer("Czarny", False, 0, 3)
         board = Board(white, black)
@@ -19,7 +19,7 @@ def random_vs_radom(cycles):
 
 def random_vs_semi_radom(cycles):
     results= []
-    for x in range(cycles):
+    for _ in range(cycles):
         white = RandomPlayer("Biały", True, 6, 3)
         black = SemiRandomPlayer("Czarny", False, 0, 3)
         board = Board(white, black)
@@ -31,7 +31,7 @@ def random_vs_semi_radom(cycles):
 
 def semi_random_vs_semi_radom(cycles):
     results= []
-    for x in range(cycles):
+    for _ in range(cycles):
         white = SemiRandomPlayer("Biały", True, 6, 3)
         black = SemiRandomPlayer("Czarny", False, 0, 3)
         board = Board(white, black)
@@ -43,7 +43,7 @@ def semi_random_vs_semi_radom(cycles):
 
 def minmax_vs_radom(cycles):
     results= []
-    for x in range(cycles):
+    for _ in range(cycles):
         white = MinMaxPlayer("Biały", True, 6, 3)
         black = RandomPlayer("Czarny", False, 0, 3)
         board = Board(white, black)
@@ -55,7 +55,7 @@ def minmax_vs_radom(cycles):
 
 def minmax_vs_semi_radom(cycles, depth):
     results= []
-    for x in range(cycles):
+    for _ in range(cycles):
         white = MinMaxPlayer("Biały", True, 6, 3,depth)
         black = SemiRandomPlayer("Czarny", False, 0, 3)
         board = Board(white, black)
@@ -67,7 +67,7 @@ def minmax_vs_semi_radom(cycles, depth):
 
 def minmax_vs_minmax(cycles,depth1, depth2):
     results= []
-    for x in range(cycles):
+    for _ in range(cycles):
         white = MinMaxPlayer("Biały", True, 6, 3,depth1)
         black = MinMaxPlayer("Czarny", False, 0, depth2)
         board = Board(white, black)
@@ -79,7 +79,7 @@ def minmax_vs_minmax(cycles,depth1, depth2):
 
 def minmax_vs_human(cycles):
     results= []
-    for x in range(cycles):
+    for _ in range(cycles):
         white = MinMaxPlayer("Biały", True, 6, 3)
         black = HumanPlayer("Czarny", False, 0, 3)
         board = Board(white, black)

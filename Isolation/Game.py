@@ -6,12 +6,14 @@ from Player import HumanPlayer, RandomPlayer, SemiRandomPlayer, MinMaxPlayer
 
 def clear():
     current_platform = platform.system()
-    if current_platform == 'Darwin':
+    if (
+        current_platform == 'Darwin'
+        or current_platform != 'Windows'
+        and current_platform == 'Linux'
+    ):
         os.system('clear')
     elif current_platform == 'Windows':
         os.system('cls')
-    elif current_platform == 'Linux':
-        os.system('clear')
 
 def new_game(board):
 
@@ -37,7 +39,7 @@ def menu():
     print("(q). Wyjdz z gry\n")
     print("||================================================||\n")
     key_input = input("Podaj opcje: ")
-    while key_input!="q" and key_input!='1' and key_input!='2' and key_input!='3':
+    while key_input not in ["q", '1', '2', '3']:
         key_input = input("Bledna opcja! Sproboj ponownie: ")
     if key_input == "1":
         min_max_game()
@@ -61,7 +63,7 @@ def min_max_game():
     clear()
     print("Czy chcesz grac (B)ialym czy (C)zarnym?")
     white_black = input(">")
-    while white_black!="B" and white_black!='C':
+    while white_black not in ["B", 'C']:
         white_black = input("Bledna opcja! Sproboj ponownie: ")
 
     print("Podaj glebokosc przeszukiwania algorytmi min-max. Zalecena: 3")
